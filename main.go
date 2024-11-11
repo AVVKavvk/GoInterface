@@ -175,12 +175,17 @@
 
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/AVVKavvk/1/file"
+)
 
 func main() {
 	// Interfaces()
   // SomeInterface()
-  SomeMap()
+  // SomeMap()
+  file.Dummy()
 }
 
 func SomeMap(){

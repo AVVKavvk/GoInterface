@@ -1,0 +1,1 @@
+This is a file tutorial in golang so i am going to learn file handling in Golang.
