@@ -178,14 +178,15 @@ package main
 import (
 	"fmt"
 
-	"github.com/AVVKavvk/1/file"
+	"github.com/AVVKavvk/1/directory"
 )
 
 func main() {
 	// Interfaces()
   // SomeInterface()
   // SomeMap()
-  file.Dummy()
+  // file.Dummy()
+  directory.Dir()
 }
 
 func SomeMap(){
