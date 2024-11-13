@@ -173,21 +173,124 @@
 
 // }
 
+// package main
+
+// import (
+// 	"fmt"
+// )
+
+// func main() {
+// 	// Interfaces()
+//   // SomeInterface()
+//   // SomeMap()
+//   // file.Dummy()
+//   // directory.Dir()
+// }
+
+// package main
+
+// import "fmt"
+
+// func worker(id int, jobs <-chan int, results chan<- int) {
+//   for j := range jobs {
+//       fmt.Println("Worker", id, "processing job", j)
+//       results <- j * 2
+//   }
+// }
+
+// func main() {
+//   jobs := make(chan int, 5)
+//   results := make(chan int, 5)
+
+//   for w := 1; w <= 3; w++ {
+//       go worker(w, jobs, results)
+//   }
+
+//   for j := 1; j <= 5; j++ {
+//       jobs <- j
+//   }
+//   close(jobs)
+
+//   for a := 1; a <= 5; a++ {
+//       fmt.Println(<-results)
+//   }
+// }
+
 package main
 
 import (
 	"fmt"
-
-	"github.com/AVVKavvk/1/directory"
+	"sync"
+	"time"
 )
 
+// func generator(nums ...int) <-chan int {
+//   out := make(chan int)
+//   go func() {
+//       for _, n := range nums {
+//           out <- n
+//       }
+//       close(out)
+//   }()
+//   return out
+// }
+
+// func square(in <-chan int) <-chan int {
+//   out := make(chan int)
+//   go func() {
+//       for n := range in {
+//           out <- n * n
+//       }
+//       close(out)
+//   }()
+//   return out
+// }
+
+// func main() {
+//   in := generator(2, 3, 4)
+//   out := square(in)
+
+//   for n := range out {
+//       fmt.Println(n)
+//   }
+// }
 func main() {
-	// Interfaces()
-  // SomeInterface()
-  // SomeMap()
-  // file.Dummy()
-  directory.Dir()
+ 
+  ch:=make(chan string)
+
+  wg:= sync.WaitGroup{}
+
+  wg.Add(2)
+
+  go func() {
+    fmt.Println("entering first")
+    time.Sleep(time.Second*5)
+    ch<- "vipin"
+    wg.Done()
+  }()
+
+  // val:=<-ch
+  // fmt.Println(val)
+
+  go func() {
+    fmt.Println("second")
+    fmt.Println(<-ch)
+    wg.Done()
+  }()
+
+wg.Wait()
+
 }
+
+
+
+
+
+
+
+
+
+
 
 func SomeMap(){
 
