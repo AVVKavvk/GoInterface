@@ -254,32 +254,86 @@ import (
 //       fmt.Println(n)
 //   }
 // }
-func main() {
- 
-  ch:=make(chan string)
+// func main() {
 
+//   ch:=make(chan string)
+
+//   wg:= sync.WaitGroup{}
+
+//   wg.Add(2)
+
+//   go func() {
+//     fmt.Println("entering first")
+//     time.Sleep(time.Second*5)
+//     ch<- "vipin"
+//     wg.Done()
+//   }()
+
+//   // val:=<-ch
+//   // fmt.Println(val)
+
+//   go func() {
+//     fmt.Println("second")
+//     fmt.Println(<-ch)
+//     wg.Done()
+//   }()
+
+// wg.Wait()
+
+// }
+
+
+func  doing(done <-chan bool)  {
+  for {
+    select {
+    case <-done:
+      fmt.Println("byeeeeeeeeee")
+      return
+    default:
+      fmt.Println("doing something")
+      
+    }
+  }
+}
+// func main()  {
+
+//   done:= make(chan bool)
+//   go doing(done)
+
+//   time.Sleep(time.Millisecond*2)
+  
+//   fmt.Println("middle")
+//   close(done)
+
+//   time.Sleep(time.Millisecond*2)
+// }
+
+
+func main()  {
+  
+  ch:=make(chan string)
   wg:= sync.WaitGroup{}
 
   wg.Add(2)
 
   go func() {
-    fmt.Println("entering first")
-    time.Sleep(time.Second*5)
+    fmt.Println("starting first....")
     ch<- "vipin"
+    fmt.Println("added data to first....")
     wg.Done()
   }()
 
-  // val:=<-ch
-  // fmt.Println(val)
+  time.Sleep(time.Millisecond*1)
 
   go func() {
-    fmt.Println("second")
-    fmt.Println(<-ch)
+    fmt.Println("Starting second")
+    time.Sleep(time.Second*2)
+    fmt.Println("Reciver ready")
+    fmt.Println("getting val from frist", <-ch)
     wg.Done()
   }()
 
-wg.Wait()
-
+  wg.Wait()
 }
 
 
