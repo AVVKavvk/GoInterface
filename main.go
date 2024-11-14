@@ -309,34 +309,156 @@ func  doing(done <-chan bool)  {
 // }
 
 
-func main()  {
+// func main()  {
   
-  ch:=make(chan string)
-  wg:= sync.WaitGroup{}
+//   ch:=make(chan string)
+//   wg:= sync.WaitGroup{}
+
+//   wg.Add(2)
+
+//   go func() {
+//     fmt.Println("starting first....")
+//     ch<- "vipin"
+//     fmt.Println("added data to first....")
+//     wg.Done()
+//   }()
+
+//   time.Sleep(time.Millisecond*1)
+
+//   go func() {
+//     fmt.Println("Starting second")
+//     time.Sleep(time.Second*2)
+//     fmt.Println("Reciver ready")
+//     fmt.Println("getting val from frist", <-ch)
+//     wg.Done()
+//   }()
+
+//   wg.Wait()
+// }
+
+
+
+// func main() {
+// 	ch := make(chan interface{})
+// 	stringCh := make(chan string)
+// 	wg := sync.WaitGroup{}
+
+// 	wg.Add(2)
+
+// 	go func() {
+// 		fmt.Println("Starting to add squared values to ch")
+// 		defer wg.Done()
+// 		defer close(ch)
+// 		for i := 1; i < 8; i++ {
+// 			ch <- i * i
+// 		}
+// 	}()
+
+// 	go func() {
+// 		defer wg.Done()
+// 		defer close(stringCh)
+// 		for val := range ch {
+// 			if intVal, ok := val.(int); ok {
+// 				stringCh <- strconv.Itoa(intVal)
+// 			}
+// 		}
+// 	}()
+
+// 	go func() {
+// 		for stringVal := range stringCh {
+// 			fmt.Printf(" %s ", stringVal)
+// 		}
+// 	}()
+
+// 	wg.Wait()
+// }
+
+func sliceToChannel(nums []int) <-chan int{
+  ch:= make(chan int)
+
+  go func() {
+    for _,val:= range nums{
+      ch<-val
+      fmt.Printf("Adding value to ch %d\n",val)
+    }
+    close(ch)
+  }()
+  return ch
+}
+
+func sq(ch <-chan int) <-chan int{
+  data:= make(chan int)
+
+  go func() {
+    
+    for val := range ch{
+      data<-val*val
+      fmt.Printf("conveting val to sq %d\n",val*val)
+    }
+    close(data)
+  }()
+  return data
+}
+
+// func main(){
+//   nums:= [] int{1,2,3,4,5,6}
+
+//   channel:= sliceToChannel(nums)
+
+//   result:= sq(channel)
+
+//   time.Sleep(time.Second*2)
+//   for n := range result{
+//     fmt.Printf("Printing value %d \n",n)
+//   }
+  
+// }
+
+
+func addData(ch chan int, wg *sync.WaitGroup)  chan int{
+  
+  fmt.Println("Started adding values")
+  
+ go func() {
+  for i:=1;i<12;i++{
+    time.Sleep(time.Second*1)
+    fmt.Println("adding ",i)
+    ch<-i
+  }
+  defer wg.Done()
+  close(ch)
+ }()
+
+  return ch
+}
+
+func fecthData (ch chan int, wg *sync.WaitGroup){
+  fmt.Println("Started fetching values")
+
+  go func() {
+    for val := range ch{
+      fmt.Println("fetching ",val)
+    }
+    defer wg.Done()
+  }()
+}
+
+func main(){
+  
+  ch:= make(chan int)
+
+  wg:= &sync.WaitGroup{}
 
   wg.Add(2)
 
-  go func() {
-    fmt.Println("starting first....")
-    ch<- "vipin"
-    fmt.Println("added data to first....")
-    wg.Done()
-  }()
+  ch= addData(ch,wg)
 
-  time.Sleep(time.Millisecond*1)
-
-  go func() {
-    fmt.Println("Starting second")
-    time.Sleep(time.Second*2)
-    fmt.Println("Reciver ready")
-    fmt.Println("getting val from frist", <-ch)
-    wg.Done()
-  }()
+  fecthData(ch,wg)
 
   wg.Wait()
+  
+
 }
-
-
 
 
 
