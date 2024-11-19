@@ -220,6 +220,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -443,22 +444,59 @@ func fecthData (ch chan int, wg *sync.WaitGroup){
   }()
 }
 
-func main(){
-  
-  ch:= make(chan int)
+func getStringToInt(s string) int{
+  i,err:= strconv.Atoi(s)
+  if err!=nil{
+    return -1
+  }
+  return i 
+}
 
-  wg:= &sync.WaitGroup{}
+func main(){  
 
-  wg.Add(2)
+  strs:=make([]string,0)
+  strs = append(strs, "12","13","14","15","16","17","18","#","20","21","22","23","24","25","26","27","28","29","30")
 
-  ch= addData(ch,wg)
+  wg:=sync.WaitGroup{}
+  mut:=sync.Mutex{}
 
-  fecthData(ch,wg)
+  wg.Add(len(strs))
+
+  result:=[]int{}
+
+  for _,val:= range strs{
+    go func() {
+      defer wg.Done()
+      i:=getStringToInt(val)
+      mut.Lock()
+      result = append(result, i)
+      mut.Unlock()
+    }()
+  }
 
   wg.Wait()
+
+  for _,val := range result{
+    fmt.Println(val)
+
+  }
+}
+// func main(){
+  
+//   ch:= make(chan int)
+
+//   wg:= &sync.WaitGroup{}
+
+//   wg.Add(2)
+
+//   ch= addData(ch,wg)
+
+//   fecthData(ch,wg)
+
+//   wg.Wait()
   
 
-}
+// }
 
 
 
